@@ -5,6 +5,8 @@ spring:
     password: Sema3105=
     driver-class-name: org.postgresql.Driver
   jpa:
-    hibernate:
-      ddl-auto: none
+    hibernate.ddl-auto: update
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
 

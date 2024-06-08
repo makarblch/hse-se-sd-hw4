@@ -3,8 +3,7 @@ package hw4.auth.authentication.entity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "user")
+@Entity(name="\"user\"")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

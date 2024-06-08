@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.SecretKey
@@ -17,11 +16,6 @@ class JwtService {
     fun extractAllClaims(token: String): Claims {
         return Jwts.parser().verifyWith(signingKey())
             .build().parseSignedClaims(token).payload
-    }
-
-    fun isValid(token: String, user: UserDetails): Boolean {
-
-        return extractAllClaims(token).subject == user.username && !extractAllClaims(token).expiration.before(Date())
     }
 
     fun generateToken(user: User): String {

@@ -22,8 +22,10 @@ class UserService(val userRepository: UserRepository, val jwtService: JwtService
             return SignUpResponse(403, "Nickname and email can't be empty.")
         }
         // User already exists
-        userRepository.findUser(nickname, email)
-            ?: return SignUpResponse(403, "Such user already exists.")
+        val usr = userRepository.findAll().find { it.email == email && it.nickname == nickname }
+        if (usr != null) {
+            return SignUpResponse(403, "Such user already exists.")
+        }
         // Incorrect email
         if (!isValidEmail(email)) {
             return SignUpResponse(403, "Incorrect email.")
