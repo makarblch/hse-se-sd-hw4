@@ -21,9 +21,8 @@ class UserService(val userRepository: UserRepository, val jwtService: JwtService
             return SignUpResponse(403, "Nickname and email can't be empty.")
         }
         // User already exists
-        var user: User =
-            userRepository.findUser(nickname, email)
-                ?: return SignUpResponse(403, "Such user already exists.")
+        userRepository.findUser(nickname, email)
+            ?: return SignUpResponse(403, "Such user already exists.")
         // Incorrect email
         if (!isValidEmail(email)) {
             return SignUpResponse(403, "Incorrect email.")
@@ -33,8 +32,9 @@ class UserService(val userRepository: UserRepository, val jwtService: JwtService
             return SignUpResponse(403, "Incorrect password. Check the requirements.")
         }
         val encryptedPassword = Encryptor.encryptPassword(userRequest.password)
-        user = userRepository.save(User(nickname = nickname, email = email, password = encryptedPassword)).copy()
+        val user = userRepository.save(User(nickname = nickname, email = email, password = encryptedPassword)).copy()
         val token = jwtService.generateToken(user)
         return SignUpResponse(200, "Successfully signed up!", token = token)
+        // meow
     }
 }
