@@ -7,15 +7,14 @@ import jakarta.persistence.*
 data class Session(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    val id: Long = 0,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    val user: User,
+    @Column(name = "user_id", nullable = false)
+    val user_id: Long,
 
     @Column(name = "token", nullable = false, length = 255)
     val token: String,
 
     @Column(name = "expires", nullable = false)
-    val expires: LocalDateTime
+    val expires: LocalDateTime = LocalDateTime.now().plusMinutes(10)
 )
