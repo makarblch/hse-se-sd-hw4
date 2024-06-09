@@ -1,0 +1,19 @@
+services:
+  db:
+    ports:
+      - 5432:5432
+    container_name: db
+    image: postgres
+    environment:
+      - POSTGRES_DB=auth-hw
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Sema3105=
+  api:
+    build: .
+    container_name: AuthService
+    ports:
+      - 8089:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/auth-hw
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=Sema3105=
