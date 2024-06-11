@@ -10,11 +10,12 @@ class SessionService (val sessionRepository: SessionRepository) {
         sessionRepository.save(session)
     }
 
-    fun getSession(token: String) : Session? {
+    fun findByToken(token: String) : Session? {
         return sessionRepository.findByToken(token)
     }
 
     fun findByUserId(id : Long) : Session? {
         return sessionRepository.findAll().findLast { it.user_id == id }
     }
+
 }

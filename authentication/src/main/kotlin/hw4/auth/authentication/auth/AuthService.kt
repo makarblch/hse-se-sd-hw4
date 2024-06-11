@@ -28,7 +28,7 @@ private val jwtService: JwtService, private val authenticationManager: Authentic
             return UserResponse(403, "Nickname and email can't be empty.")
         }
         // User already exists
-        val usr = userRepository.findAll().find { it.email == email || it.nickname == nickname }
+        val usr = userRepository.findAll().find { it.email == email }
         if (usr != null) {
             return UserResponse(403, "Such user already exists.")
         }
@@ -57,7 +57,7 @@ private val jwtService: JwtService, private val authenticationManager: Authentic
                 )
             )
         } catch (_: Exception) {
-            return UserResponse(403, "Incorrect password.")
+            return UserResponse(403, "Incorrect login or password.")
         }
         val user = userRepository.findByEmail(loginUserRequest.email) ?: return UserResponse(403, "No such user. Please, sign up.")
         val token = sessionService.findByUserId(user.id)
@@ -70,5 +70,4 @@ private val jwtService: JwtService, private val authenticationManager: Authentic
         sessionService.saveSession(Session(user_id = user.id, token = tk))
         return UserResponse(200, "Successfully logged in!", token = tk)
     }
-
 }

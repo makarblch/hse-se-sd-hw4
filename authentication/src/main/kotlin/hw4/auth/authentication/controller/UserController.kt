@@ -27,8 +27,8 @@ class UserController(val authService: AuthService, val userService: UserService)
     }
 
     @PostMapping("/info")
-    fun getInfo(@RequestBody token : TokenRequest) : ResponseEntity<UserDataResponse> {
-        val resp : UserDataResponse = userService.getInfo(token)
-        return ResponseEntity.status(resp.status).body(resp)
+    fun getInfo(@RequestBody tokenRequest: TokenRequest) : ResponseEntity<UserDataResponse> {
+        val resp : UserDataResponse = userService.getInfo(tokenRequest)
+        return ResponseEntity.ok().body(resp)
     }
 }

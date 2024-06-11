@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class JwtFilter(private val jwtService: JwtService,
-                private val userService: UserService
-): OncePerRequestFilter() {
+class JwtFilter(
+    private val jwtService: JwtService,
+    private val userService: UserService
+) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -29,6 +30,11 @@ class JwtFilter(private val jwtService: JwtService,
 
         val token = authHeader.substring(7)
         val claims = jwtService.extractAllClaims(token)
+        if (claims == null) {
+            response.status = HttpServletResponse.SC_FORBIDDEN
+            filterChain.doFilter(request, response)
+            return
+        }
 
         if (claims.subject != null && SecurityContextHolder.getContext().authentication == null) {
             val user = userService.loadUserByUsername(claims.subject)
@@ -40,7 +46,6 @@ class JwtFilter(private val jwtService: JwtService,
                 SecurityContextHolder.getContext().authentication = authToken
             }
         }
-
         filterChain.doFilter(request, response)
     }
 }

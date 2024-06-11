@@ -1,0 +1,38 @@
+services:
+  db:
+    ports:
+      - 5432:5432
+    container_name: DbContainer
+    image: postgres
+    environment:
+#      - POSTGRES_DB=auth-hw
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=meow
+  db_ticket:
+    ports:
+      - 5442:5442
+    container_name: DbTicketContainer
+    image: postgres
+    environment:
+#      - POSTGRES_DB=ticket-hw
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=meow
+    command: -p 5442
+  auth-service:
+    build: authentication/.
+    container_name: AuthService
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://DbContainer:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=meow
+  ticket-service:
+    build: tickets/.
+    container_name: TicketService
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://DbTicketContainer:5442/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=meow

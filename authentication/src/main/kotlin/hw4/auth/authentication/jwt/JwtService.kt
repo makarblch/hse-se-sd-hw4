@@ -14,18 +14,27 @@ import javax.crypto.SecretKey
 class JwtService {
     private val secretKey = "my0320character0ultra0secure0and0ultra0long0secret"
 
-    fun extractAllClaims(token: String): Claims {
-        return Jwts.parser().verifyWith(signingKey())
-            .build().parseSignedClaims(token).payload
+    fun extractAllClaims(token: String): Claims? {
+        return try {
+            Jwts.parser().verifyWith(signingKey())
+                .build().parseSignedClaims(token).payload
+        } catch (_ : Exception) {
+            println("exception got")
+            null
+        }
     }
 
-    fun isValid(token: String, user: UserDetails): Boolean {
-        return extractAllClaims(token).subject == user.username && !extractAllClaims(token).expiration.before(Date())
+    fun isValid(token: String, user: UserDetails) : Boolean {
+        val claims = extractAllClaims(token)
+        if (claims != null) {
+            return claims.subject == user.username && !claims.expiration.before(Date())
+        }
+        return false
     }
 
     fun generateToken(user: User): String {
 
-        return Jwts.builder().subject(user.nickname)
+        return Jwts.builder().subject(user.email)
             .issuedAt(Date(System.currentTimeMillis()))
             .expiration(Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
             .signWith(signingKey())
@@ -33,7 +42,11 @@ class JwtService {
     }
 
     private fun signingKey(): SecretKey {
-        val keyBytes = Decoders.BASE64.decode(secretKey)
-        return Keys.hmacShaKeyFor(keyBytes)
+        return try {
+            val keyBytes = Decoders.BASE64.decode(secretKey)
+            Keys.hmacShaKeyFor(keyBytes)
+        } catch (_ : Exception) {
+            Keys.hmacShaKeyFor(byteArrayOf())
+        }
     }
 }
