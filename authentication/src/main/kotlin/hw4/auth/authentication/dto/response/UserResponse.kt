@@ -1,4 +1,7 @@
 package hw4.auth.authentication.dto.response
 
-class UserResponse {
-}
+data class UserResponse (
+    val status : Int,
+    val message : String? = null,
+    val token : String? = null
+)

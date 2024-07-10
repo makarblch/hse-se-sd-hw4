@@ -2,8 +2,7 @@ package hw4.auth.authentication.entity
 import java.time.LocalDateTime
 import jakarta.persistence.*
 
-@Entity
-@Table(name = "session")
+@Entity(name="session")
 data class Session(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

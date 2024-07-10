@@ -1,24 +1,26 @@
-package hw4.auth.authentication.entity
+package hw4.sell.tickets.order
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
-@Entity(name="\"user\"")
-data class User(
+@Entity(name="\"order\"")
+data class Order (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
     @Column(nullable = false)
-    var nickname: String,
-
-    @Column(nullable = false, unique = true)
-    var email: String,
+    var user_id: Long,
 
     @Column(nullable = false)
-    var password: String,
+    var from_station_id: Long,
+
+    @Column(nullable = false)
+    var to_station_id: Long,
+
+    @Column(nullable = false)
+    var status: Int = 1,
 
     @Column(columnDefinition = "TIMESTAMP")
     val created: LocalDateTime = LocalDateTime.now()
-
 )

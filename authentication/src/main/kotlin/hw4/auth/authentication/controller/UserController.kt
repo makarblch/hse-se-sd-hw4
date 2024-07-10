@@ -1,31 +1,34 @@
 package hw4.auth.authentication.controller
 
+import hw4.auth.authentication.auth.AuthService
+import hw4.auth.authentication.dto.request.LoginUserRequest
+import hw4.auth.authentication.dto.request.TokenRequest
 import hw4.auth.authentication.dto.request.UserRequest
-import hw4.auth.authentication.dto.response.SignUpResponse
+import hw4.auth.authentication.dto.response.UserDataResponse
 import hw4.auth.authentication.dto.response.UserResponse
 import hw4.auth.authentication.service.UserService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/user")
-class UserController(val userService: UserService) {
+@RequestMapping("/user")
+class UserController(val authService: AuthService, val userService: UserService) {
 
-    @GetMapping("/signup")
-    fun signUp(userRequest: UserRequest) : SignUpResponse {
-        return userService.addNewUser(userRequest)
+    @PostMapping("/signup")
+    fun signUp(@RequestBody userRequest: UserRequest) : ResponseEntity<UserResponse> {
+        val resp : UserResponse = authService.addNewUser(userRequest)
+        return ResponseEntity.status(resp.status).body(resp)
     }
 
-    @GetMapping("/login")
-    fun logIn(userRequest: UserRequest) : UserResponse {
-        // TODO
-        return UserResponse()
+    @PostMapping("/login")
+    fun logIn(@RequestBody userRequest: LoginUserRequest) : ResponseEntity<UserResponse> {
+        val resp : UserResponse = authService.logInUser(userRequest)
+        return ResponseEntity.status(resp.status).body(resp)
     }
 
-    @GetMapping("/info")
-    fun getInfo(token : String) : UserResponse {
-        // TODO
-        return UserResponse()
+    @PostMapping("/info")
+    fun getInfo(@RequestBody tokenRequest: TokenRequest) : ResponseEntity<UserDataResponse> {
+        val resp : UserDataResponse = userService.getInfo(tokenRequest)
+        return ResponseEntity.ok().body(resp)
     }
 }
